@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
 app.use(cors({
-  origin: 'https://personal-portfolio-frontend-fmfq.vercel.app/',
+  origin: 'https://personal-portfolio-frontend-fmfq.vercel.app',
   credentials: true
 }))
 
