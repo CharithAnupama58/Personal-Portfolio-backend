@@ -10,7 +10,7 @@ const projectRoutes = require('./routes/projects');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+console.log('Server ekata awa');
 app.use(helmet());
 app.use(cors({
   origin: 'https://personal-portfolio-frontend-fmfq.vercel.app',

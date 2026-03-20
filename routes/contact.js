@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
     if (!name || !email || !subject || !message) {
       return res.status(400).json({ success: false, error: 'All fields are required' })
     }
-
+    console.log(name,email);
     // Save to database
     const result = await pool.query(
       `INSERT INTO contact_messages (name, email, subject, message)
