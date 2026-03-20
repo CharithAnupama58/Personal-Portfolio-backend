@@ -10,7 +10,7 @@ router.post('/', async (req, res) => {
     if (!name || !email || !subject || !message) {
       return res.status(400).json({ success: false, error: 'All fields are required' })
     }
-    console.log(name,email);
+
     // Save to database
     const result = await pool.query(
       `INSERT INTO contact_messages (name, email, subject, message)
@@ -18,19 +18,18 @@ router.post('/', async (req, res) => {
       [name.trim(), email.trim().toLowerCase(), subject.trim(), message.trim()]
     )
 
-    // Send emails (don't fail if email fails)
-    try {
-      await sendContactEmail({ name, email, subject, message })
-      console.log(`✅ Email sent for contact from ${email}`)
-    } catch (emailErr) {
-      console.error('⚠️ Email failed (message still saved):', emailErr.message)
-    }
-
+    // Send success response IMMEDIATELY — don't wait for email
     res.status(201).json({
       success: true,
       message: "Thank you! Your message has been received. I'll get back to you soon.",
       id: result.rows[0].id
     })
+
+    // Send email IN BACKGROUND after response is sent
+    sendContactEmail({ name, email, subject, message })
+      .then(() => console.log(`✅ Email sent for contact from ${email}`))
+      .catch(err => console.error('⚠️ Email failed:', err.message))
+
   } catch (err) {
     console.error('Contact error:', err)
     res.status(500).json({ success: false, error: 'Failed to send message.' })
